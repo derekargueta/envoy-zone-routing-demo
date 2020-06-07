@@ -10,10 +10,6 @@ services:
       - "9901:9901"
     volumes:
       - "./envoy_configs/clients/zone_a_1.yml:/etc/envoy/config.yaml:ro"
-    # links:
-    #   - 'envoy_server_a_1'
-    #   - 'envoy_server_a_2'
-    #   - 'envoy_server_b_1'
   envoy_server_a_1:
     image: "envoyproxy/envoy:v1.14.1"
     command: --config-path /etc/envoy/config.yaml
@@ -25,17 +21,6 @@ services:
       - "8001"
     volumes:
       - "./envoy_configs/servers/zone_a_1.yml:/etc/envoy/config.yaml:ro"
-  envoy_server_a_2:
-    image: "envoyproxy/envoy:v1.14.1"
-    command: --config-path /etc/envoy/config.yaml
-    networks:
-      envoymesh:
-        aliases:
-          - envoy_server_a_2
-    expose:
-      - "8002"
-    volumes:
-      - "./envoy_configs/servers/zone_a_2.yml:/etc/envoy/config.yaml:ro"
   envoy_server_b_1:
     image: "envoyproxy/envoy:v1.14.1"
     command: --config-path /etc/envoy/config.yaml
@@ -47,6 +32,17 @@ services:
       - "8003"
     volumes:
       - "./envoy_configs/servers/zone_b_1.yml:/etc/envoy/config.yaml:ro"
+  envoy_server_b_2:
+    image: "envoyproxy/envoy:v1.14.1"
+    command: --config-path /etc/envoy/config.yaml
+    networks:
+      envoymesh:
+        aliases:
+          - envoy_server_b_2
+    expose:
+      - "8004"
+    volumes:
+      - "./envoy_configs/servers/zone_b_2.yml:/etc/envoy/config.yaml:ro"
 
 networks:
   envoymesh: {}

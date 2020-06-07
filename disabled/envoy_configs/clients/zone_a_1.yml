@@ -95,3 +95,8 @@ static_resources:
               socket_address:
                 address: envoy_server_b_1
                 port_value: 8003
+        - endpoint:
+            address:
+              socket_address:
+                address: envoy_server_b_2
+                port_value: 8004
