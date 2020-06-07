@@ -1,0 +1,97 @@
+admin:
+  access_log_path: /tmp/admin_access.log
+  address:
+    socket_address: { address: 0.0.0.0, port_value: 9901 }
+
+# This sets the information of where this client is located. The
+# local_cluster_name is used in CDS/EDS to fetch the endpoints
+# of its peers. The locality distribution of peers determines the
+# zone aware routing distribution.
+node:
+  locality:
+    zone: zone_a
+cluster_manager:
+  local_cluster_name: local_cluster
+
+static_resources:
+  listeners:
+  - name: listener_0
+    address:
+      socket_address: { address: 0.0.0.0, port_value: 8000 }
+    filter_chains:
+    - filters:
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          stat_prefix: ingress_http
+          codec_type: AUTO
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: local_service
+              domains: ["*"]
+              routes:
+              - match:
+                  prefix: '/'
+                route:
+                  cluster: server
+          http_filters:
+          - name: envoy.filters.http.router
+  clusters:
+  - name: local_cluster
+    connect_timeout: 0.25s
+    type: STATIC
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: local_cluster
+      endpoints:
+      - locality:
+          zone: 'zone_a'
+        lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: 127.0.0.1
+                port_value: 8000
+        - endpoint:
+            address:
+              socket_address:
+                address: 127.0.0.1
+                port_value: 8001
+      - locality:
+          zone: 'zone_b'
+        lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: 127.0.0.1
+                port_value: 8003
+
+  - name: server
+    connect_timeout: 0.25s
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: some_service
+      endpoints:
+      - locality:
+          zone: 'zone_a'
+        lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: envoy_server_a_1
+                port_value: 8001
+        - endpoint:
+            address:
+              socket_address:
+                address: envoy_server_a_2
+                port_value: 8002
+      - locality:
+          zone: 'zone_b'
+        lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: envoy_server_b_1
+                port_value: 8003
