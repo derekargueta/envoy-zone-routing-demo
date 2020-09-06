@@ -1,7 +1,7 @@
 version: '3'
 services:
   envoy_client:
-    image: "envoyproxy/envoy:v1.14.1"
+    image: "envoyproxy/envoy:v1.15.0"
     command: --config-path /etc/envoy/config.yaml
     networks:
       - envoymesh
@@ -11,7 +11,7 @@ services:
     volumes:
       - "./envoy_configs/clients/zone_a_1.yml:/etc/envoy/config.yaml:ro"
   envoy_server_a_1:
-    image: "envoyproxy/envoy:v1.14.1"
+    image: "envoyproxy/envoy:v1.15.0"
     command: --config-path /etc/envoy/config.yaml
     networks:
       envoymesh:
@@ -22,7 +22,7 @@ services:
     volumes:
       - "./envoy_configs/servers/zone_a_1.yml:/etc/envoy/config.yaml:ro"
   envoy_server_a_2:
-    image: "envoyproxy/envoy:v1.14.1"
+    image: "envoyproxy/envoy:v1.15.0"
     command: --config-path /etc/envoy/config.yaml
     networks:
       envoymesh:
@@ -33,7 +33,7 @@ services:
     volumes:
       - "./envoy_configs/servers/zone_a_2.yml:/etc/envoy/config.yaml:ro"
   envoy_server_b_1:
-    image: "envoyproxy/envoy:v1.14.1"
+    image: "envoyproxy/envoy:v1.15.0"
     command: --config-path /etc/envoy/config.yaml
     networks:
       envoymesh:
@@ -44,7 +44,7 @@ services:
     volumes:
       - "./envoy_configs/servers/zone_b_1.yml:/etc/envoy/config.yaml:ro"
   envoy_server_b_2:
-    image: "envoyproxy/envoy:v1.14.1"
+    image: "envoyproxy/envoy:v1.15.0"
     command: --config-path /etc/envoy/config.yaml
     networks:
       envoymesh:
