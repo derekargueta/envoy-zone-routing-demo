@@ -84,10 +84,10 @@ Zone A sends 50% of it's traffic to zone B.
 | b    | 1       | 2       |
 
 ```bash
-$ while true; do curl -so /dev/null localhost:8000; done
-^C%
 $ cd cross_zone
 $ docker-compose up -d
+$ while true; do curl -so /dev/null localhost:8000; done
+^C%
 $ curl -s localhost:9901/stats | grep server | grep lb_zone
 cluster.server.lb_zone_cluster_too_small: 0
 cluster.server.lb_zone_no_capacity_left: 0
